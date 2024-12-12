@@ -48,8 +48,25 @@ lemma prime_dvd_binomial_coeff {p k : ℕ} (hp : Nat.Prime p) (hk : 1 ≤ k ∧ 
   (a + b)^n = ((List.range (n + 1)).map (λ k => Nat.choose n k * a^k * b^(n - k))).sum := by
   sorry
 
+  lemma list_sum_cons {hd : ℕ} {tl : List ℕ} :
+  List.sum (hd :: tl) = hd + List.sum tl := by
+  sorry
+
 lemma list_sum_divisible_of_all_divisible {l : List ℕ} {p : ℕ} (hp : ∀ x ∈ l, p ∣ x) :
-  p ∣ l.sum := by sorry
+  p ∣ l.sum := by
+  induction l with
+  |nil =>
+    -- Base case: The list is empty, so l.sum = 0
+    exact dvd_zero p
+  |cons hd tl ih =>
+    -- Inductive step: The list is of the form hd :: tl
+    have h_hd : p ∣ hd := hp hd (List.mem_cons_self hd tl)
+    have h_tl : p ∣ tl.sum := ih (λ x hx => hp x (List.mem_cons_of_mem hd hx))
+    -- Combine results using divides_add
+    dsimp [Nat.instDvdNat]
+    rw[list_sum_cons]
+    exact divides_add p hd tl.sum h_hd h_tl
+
 
 -- Lemma: For prime p, p divides (a + b)^p - a^p - b^p
 lemma fermat_little_lemma (p a b : ℕ) (hp : Nat.Prime p) : Divides p ((a + b)^p - a^p - b^p) := by
