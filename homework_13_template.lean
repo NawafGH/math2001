@@ -238,7 +238,12 @@ end
 --Exercise 10.1.5.6
 
 example : Reflexive ((· : Set ℕ) ⊆ ·) := by
-  sorry
+  dsimp[Reflexive]
+  intro x
+  dsimp[Set.subset_def]
+  intro x h
+  apply h
+
 
 example : ¬ Reflexive ((· : Set ℕ) ⊆ ·) := by
   sorry
@@ -247,16 +252,44 @@ example : Symmetric ((· : Set ℕ) ⊆ ·) := by
   sorry
 
 example : ¬ Symmetric ((· : Set ℕ) ⊆ ·) := by
-  sorry
+  dsimp[Symmetric]
+  push_neg
+  use {1}
+  use {1, 2}
+  dsimp[Set.subset_def]
+  constructor
+  intro x h
+  left
+  apply h
+  push_neg
+  use 2
+  constructor
+  right
+  numbers
+  numbers
 
 example : AntiSymmetric ((· : Set ℕ) ⊆ ·) := by
-  sorry
+  dsimp[AntiSymmetric]
+  dsimp[Set.subset_def]
+  intro x y h1 h2
+  ext x
+  constructor
+  intro h3
+  apply h1 x h3
+  intro h3
+  apply h2 x h3
+
 
 example : ¬ AntiSymmetric ((· : Set ℕ) ⊆ ·) := by
   sorry
 
 example : Transitive ((· : Set ℕ) ⊆ ·) := by
-  sorry
+  dsimp[Transitive]
+  dsimp[Set.subset_def]
+  intro x y z h1 h2
+  intro t h
+  have h3 := h1 t h
+  apply h2 t h3
 
 example : ¬ Transitive ((· : Set ℕ) ⊆ ·) := by
   sorry
